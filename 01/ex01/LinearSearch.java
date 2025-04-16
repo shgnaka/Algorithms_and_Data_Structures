@@ -9,11 +9,11 @@ public class LinearSearch {
             Scanner sc = new Scanner(System.in);
             System.out.print("整数を入力してください: ");
             int key = sc.nextInt();
-            search(key);
-            System.out.println("index" + search(key));
             if (key == -999999) {
                 break;
             }
+            search(key);
+            System.out.println("index" + search(key));
         }
     }
     public static int search(int key) {

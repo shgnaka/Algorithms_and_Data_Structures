@@ -4,13 +4,15 @@ public class BinarySearch {
     static int a[] = {0, 1, 8, 27, 64, 125, 216, 343, 512, 729, 1000};
     public static void main(String args[]){
         Scanner sc = new Scanner(System.in);
-        System.out.print("整数を入力してください: ");
-        int key = sc.nextInt();
-        if (key == -999999) {
-            return;
+        while (true) {
+            System.out.print("整数を入力してください: ");
+            int key = sc.nextInt();
+            if (key == -999999) {
+                break;
+            }
+            search(key);
+            System.out.println("index" + search(key));
         }
-        search(key);
-        System.out.println("index" + search(key));
     }
     public static int search(int key) {
     int low = 0;

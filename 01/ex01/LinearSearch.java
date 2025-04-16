@@ -4,7 +4,7 @@ public class LinearSearch {
     static final int NUM = 11;
     static int a[]= {0, 1, 8, 27, 64, 125, 216, 343, 512, 729, 1000};
     int key;
-    public static void main() {
+    public static void main(String args[]) {
         while(true) {
             Scanner sc = new Scanner(System.in);
             System.out.print("整数を入力してください: ");

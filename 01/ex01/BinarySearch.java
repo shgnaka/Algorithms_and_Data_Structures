@@ -1,7 +1,7 @@
 import java.util.Scanner;
 public class BinarySearch {
     final static int NUM = 6;
-    static int a[] = {2005, 0412, 00, 1, 830, 1102};
+    static int a[] = {0, 1, 412, 830, 1102, 2005};
     public static void main(String args[]){
         Scanner sc = new Scanner(System.in);
         while (true) {

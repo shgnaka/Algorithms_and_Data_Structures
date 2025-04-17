@@ -26,6 +26,11 @@ public class LinearSearch extends MySearch {
     }
 
     public int searchIndex(String key){
+        for (int i = 0; i < datanum; i++) {
+            if () {
+                
+            }
+        }
         /*    using strcmp(data[i].getKey(), key) == 0    */
         /*    strcmp is in MySearch.java */
         return -1;

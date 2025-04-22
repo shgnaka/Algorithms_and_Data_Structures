@@ -27,10 +27,11 @@ public class LinearSearch extends MySearch {
 
     public int searchIndex(String key){
         for (int i = 0; i < datanum; i++) {
-            if () {
-                
+            if (strcmp(data[i].getData(), key)==0) {
+                return i;
             }
         }
+        
         /*    using strcmp(data[i].getKey(), key) == 0    */
         /*    strcmp is in MySearch.java */
         return -1;

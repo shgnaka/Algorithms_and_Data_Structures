@@ -31,9 +31,6 @@ public class LinearSearch extends MySearch {
                 return i;
             }
         }
-        
-        /*    using strcmp(data[i].getKey(), key) == 0    */
-        /*    strcmp is in MySearch.java */
         return -1;
     }
 

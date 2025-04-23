@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-class Ex01_L1 {
+class Rp01_B1 {
     static MySearch mySearch;
 
     static int checkSearchCount;

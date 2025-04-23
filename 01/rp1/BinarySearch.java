@@ -1,6 +1,6 @@
-public class LinearSearch extends MySearch {
+public class BinarySearch extends MySearch {
     
-    LinearSearch(int max){
+    BinarySearch(int max){
         super(max);
     }
 

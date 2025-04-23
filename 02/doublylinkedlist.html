@@ -1,0 +1,725 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>初期状態</title>
+<script type="text/javascript">
+// フォント
+var _fontInfo = "10px 'Times New Roman'";
+
+// 色
+var _vAreaColor     = 'rgb(224, 255, 224)'; 
+var _nAreaColor     = 'rgb(224, 224, 255)'; 
+var _nodeOuterColor = 'rgb(192, 255, 192)'; 
+var _boxInnerColor  = 'rgb(255, 255, 255)'; 
+
+// 箱のサイズ
+var _wSize = 30;
+var _hSize = 30;
+
+// 線幅
+var _normalWidth = 1; // 通常描画の線の幅
+var _boldWidth   = 3; // 強調する描画の際の線の幅
+
+// 変数箱の描画開始位置
+var _boxX0 = 20;
+var _boxY0 = 20;
+
+// 変数領域
+var _vx0 = 0;
+var _vy0 = 0;
+var _vw = 400;
+var _vh = 60;
+// 変数箱の間隔
+var _vInterval  = 20 + _wSize;
+
+// ノード領域
+var _hx0 = 0;
+var _hy0 = 50
+var _hw = 400;
+var _hh = 150;
+
+// ノード箱の描画開始位置
+var _nodeX0 = 25;
+var _nodeY0 = 40;
+
+var _hNum = 3; // 箱の個数
+var _hMargin = 5; // 外箱のマージン
+// ヒープ箱の間隔
+var _hInterval  = 20 + _wSize * _hNum + 2 * _hMargin;
+
+var varNum = 0;
+var nodeNum = 0;
+
+// 各ノードの参照情報
+var nodeNextRef = new Array(100);
+var nodePrevRef = new Array(100);
+
+// 変数情報
+var varInfoHash  = {}; // 名前検索・保存用
+var varInfoArray = []; // 変数の名前・参照先保存用
+
+// focus 用
+var normalFocusColor = "rgb(0,0,0)";
+var leftFocusColor = "rgb(255,0,0)";
+var rightFocusColor = "rgb(0,0,255)";
+var indexLeftFocus;
+var isNextLeftFocus;
+var isPrevLeftFocus;
+var indexRightFocus;
+var isNextRightFocus;
+var isPrevRightFocus;
+
+// 最初に読み込まれるプログラム．
+onload = function(){
+  initialize('prevWorld');
+  initialize('nowWorld');
+}
+
+//////////////////////////////////////////////
+function initialize(idName){
+  var canvas = document.getElementById(idName);
+  var ctx = canvas.getContext('2d');
+  // 変数領域の描画
+  ctx.beginPath();
+  ctx.fillStyle = _vAreaColor;
+  ctx.fillRect(_vx0, _vy0, _vw, _vh);
+
+  // ノード領域の描画
+  ctx.fillStyle = _nAreaColor;
+  ctx.fillRect(_hx0, _hy0, _hw, _hh);
+}
+
+//////////////////////////////////////////////
+function drawVar(idName){
+  var canvas = document.getElementById(idName);
+  var ctx = canvas.getContext('2d');
+  for (i=0; varNum>i; i++){
+    var pointColor;
+    var pointWidth;
+    if (indexLeftFocus == i && (isNextLeftFocus == 0 && isPrevLeftFocus == 0)) {
+      pointColor = leftFocusColor;
+      pointWidth = _boldWidth;
+    }else{
+      pointColor = normalFocusColor;
+      pointWidth = _normalWidth;
+    }
+    drawX = positionVarLeft(i);
+    drawY = positionVarTop();
+    ctx.fillStyle = _boxInnerColor;
+    ctx.fillRect(drawX, drawY, _wSize, _hSize);
+    ctx.strokeStyle = pointColor;
+    ctx.lineWidth = pointWidth;
+    ctx.strokeRect(drawX, drawY, _wSize, _hSize);
+    ctx.font = _fontInfo;
+    ctx.fillStyle = pointColor;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "bottom";
+    ctx.fillText("" + varInfoArray[i]["name"], positionVarCenterX(i), drawY - 5);
+  }
+  ctx.lineWidth = _normalWidth;
+}
+
+//////////////////////////////////////////////
+function drawNode(idName){
+  var canvas = document.getElementById(idName);
+  var ctx = canvas.getContext('2d');
+  for (i=0; nodeNum>i; i++){
+    drawX = positionNodeLeft(i);
+    drawY = positionNodeTop();
+    // 外枠
+    ctx.fillStyle = _nodeOuterColor;
+    ctx.fillRect(drawX - _hMargin, drawY - _hMargin,
+                 _wSize * _hNum + 2 *  _hMargin, _hSize + 2 *  _hMargin);
+    ctx.strokeStyle = normalFocusColor;
+    ctx.strokeRect(drawX - _hMargin, drawY -  _hMargin,
+                 _wSize * _hNum + 2 *  _hMargin, _hSize + 2 *  _hMargin);
+    // 内枠
+    ctx.fillStyle = _boxInnerColor;
+    ctx.fillRect(drawX, drawY, _wSize * _hNum, _hSize);
+    for (j=0; _hNum > j; j++){
+      if (indexLeftFocus == i && j == _hNum - 1 && isNextLeftFocus == 1){
+        ctx.strokeStyle = leftFocusColor;
+        ctx.lineWidth = _boldWidth;
+      }else if (indexLeftFocus == i && j == 0 && isPrevLeftFocus == 1){
+        ctx.strokeStyle = leftFocusColor;
+        ctx.lineWidth = _boldWidth;
+      }else{
+        ctx.strokeStyle = normalFocusColor
+        ctx.lineWidth = _normalWidth;
+      }
+      ctx.strokeRect(drawX + _wSize * j, drawY, _wSize, _hSize);
+    }
+    ctx.lineWidth = _normalWidth;
+  }
+}
+
+//////////////////////////////////////////////
+function drawLink(idName){
+  var canvas = document.getElementById(idName);
+  var ctx = canvas.getContext('2d');
+  cY = positionVarCenterY();
+  for (i=0; varNum > i; i++){
+    cX = positionVarCenterX(i);
+    var drawColor;
+    var drawWidth;
+    if (indexLeftFocus == i && (isNextLeftFocus == 0 && isPrevLeftFocus == 0)){
+      drawColor = rightFocusColor;
+      drawWidth = _boldWidth;
+    }else if (indexRightFocus == i && (isNextRightFocus == 0 && isPrevRightFocus == 0)){
+      drawColor = rightFocusColor;
+      drawWidth = _boldWidth;
+    }else{
+      drawColor = normalFocusColor;
+      drawWidth = _normalWidth;
+    }
+    ctx.lineWidth = drawWidth;
+    ctx.strokeStyle = drawColor;
+    ctx.fillStyle = drawColor;
+    drawRootCircle(ctx, cX, cY);
+    ref = varInfoArray[i]["ref"];
+    if (ref == -1) {
+      drawArrow(ctx, cX, cY, cX, cY + 50);
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
+      ctx.font = _fontInfo;
+      ctx.fillText("null", cX, cY + 55);
+    } else {
+      drawArrow(ctx, cX, cY,
+                positionNodeOuterCenterX(ref),
+                positionNodeOuterTop(ref));
+    }
+  }
+  ctx.lineWidth = _normalWidth;
+  cY = positionNodeCenterY();
+
+  // next node 
+  for (i=0; nodeNum > i; i++){
+    cX = positionNodeCenterX(i, 3);
+    var drawColor;
+    var drawWidth;
+    if (indexLeftFocus == i && isNextLeftFocus == 1){
+      drawColor = rightFocusColor;
+      drawWidth = _boldWidth;
+    }else if (indexRightFocus == i && isNextRightFocus == 1){
+      drawColor = rightFocusColor;
+      drawWidth = _boldWidth;
+    }else{
+      drawColor = normalFocusColor;
+      drawWidth = _normalWidth;
+    }
+    ctx.lineWidth = drawWidth;
+    ctx.strokeStyle = drawColor;
+    ctx.fillStyle = drawColor;
+    drawRootCircle(ctx, cX, cY + 5);
+    if (nodeNextRef[i] == -1) {
+      drawArrow(ctx, cX, cY, cX, cY + 50);
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
+      ctx.font = _fontInfo;
+      ctx.fillText("null", cX, cY + 55);
+    } else {
+      var ref = nodeNextRef[i];
+      if (ref == i + 1) { // 次のノードを素直に指す場合
+         drawArrow(ctx, cX, cY + 5,
+                   positionNodeOuterLeft(ref),
+                   positionNodeOuterCenterY(ref) + 5);
+      } else {
+         drawLine(ctx, cX, cY + 5, cX, cY + 5 + 60 + i*5); // 下向き線
+         drawLine(ctx, cX, cY + 5 + 60 + i*5, 
+                  positionNodeOuterCenterX(ref),
+                  cY + 5 + 60 + i*5);                  // X方向線
+         drawArrow(ctx, positionNodeOuterCenterX(ref), cY + 5 + 60 + i*5,
+                   positionNodeOuterCenterX(ref),
+                   positionNodeOuterBottom(ref))   // 上向き矢印
+      }
+    }
+    ctx.lineWidth = _normalWidth;
+  }
+
+  // prev node 
+  for (i=0; nodeNum > i; i++){
+    cX = positionNodeCenterX(i, 1);
+    var drawColor;
+    var drawWidth;
+    if (indexLeftFocus == i && isPrevLeftFocus == 1){
+      drawColor = rightFocusColor;
+      drawWidth = _boldWidth;
+    }else if (indexRightFocus == i && isPrevRightFocus == 1){
+      drawColor = rightFocusColor;
+      drawWidth = _boldWidth;
+    }else{
+      drawColor = normalFocusColor;
+      drawWidth = _normalWidth;
+    }
+    ctx.lineWidth = drawWidth;
+    ctx.strokeStyle = drawColor;
+    ctx.fillStyle = drawColor;
+    drawRootCircle(ctx, cX, cY - 5);
+    if (nodePrevRef[i] == -1) {
+      drawArrow(ctx, cX, cY, cX, cY + 50);
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
+      ctx.font = _fontInfo;
+      ctx.fillText("null", cX, cY + 55);
+    } else {
+      var ref = nodePrevRef[i];
+      if (ref == i - 1) { // 前のノードを素直に指す場合
+         drawArrow(ctx, cX, cY - 5,
+                   positionNodeOuterRight(ref,_hNum),
+                   positionNodeOuterCenterY(ref) - 5);
+      } else {
+         drawLine(ctx, cX, cY - 5, cX, cY -5 + 60 + i*5); // 下向き線
+         drawLine(ctx, cX, cY -5 + 60 + i*5, 
+                  positionNodeOuterCenterX(ref),
+                  cY -5 + 60 + i*5);                  // X方向線
+         drawArrow(ctx, positionNodeOuterCenterX(ref), cY -5 + 60 + i*5,
+                   positionNodeOuterCenterX(ref),
+                   positionNodeOuterBottom(ref))   // 上向き矢印
+      }
+    }
+    ctx.lineWidth = _normalWidth;
+  }
+}
+
+//////////////////////////////////////////////
+function positionVarCenterX(num){ 
+  return positionVarLeft(num) + _wSize*0.5;
+}
+function positionVarLeft(num){
+  return _vx0 + _boxX0 + _vInterval * num;
+}
+
+//////////////////////////////////////////////
+function positionVarCenterY(){ 
+  return positionVarTop() + _hSize*0.5;
+}
+function positionVarTop(){
+  return _vy0 + _boxY0;
+}
+
+//////////////////////////////////////////////
+function positionNodeCenterX(num1, num2){ // ノードの num2番目の箱の中央
+  return positionNodeLeft(num1) + _wSize * (num2 - 0.5);
+}
+function positionNodeOuterCenterX(num1){ // ノード全体の中央
+  return positionNodeLeft(num1) + _wSize * _hNum / 2;
+}
+function positionNodeOuterCenterLeft(num1){ // ノード全体の左
+  return positionNodeLeft(num1) - _hMargin;
+}
+function positionNodeOuterLeft(num1){ // ノード全体の左
+  return positionNodeLeft(num1) - _hMargin;
+}
+function positionNodeOuterRight(num1,num2){ // ノード全体の右
+  return positionNodeLeft(num1) + _wSize * num2 + _hMargin;
+}
+function positionNodeLeft(num){ // ノードの一番左の箱の左
+  return _hx0 + _nodeX0 + _hInterval * num;
+}
+
+//////////////////////////////////////////////
+function positionNodeCenterY(num){ 
+  return positionNodeTop(num) + _hSize*0.5;
+}
+function positionNodeOuterTop(num){ // ノード全体の上
+  return _hy0 + _nodeY0 - _hMargin;
+}
+function positionNodeOuterCenterY(num){ // ノード全体の中央
+  return positionNodeTop(num) + _hSize / 2;
+}
+function positionNodeOuterBottom(num){ // ノード全体の下
+  return _hy0 + _nodeY0 + _hSize + _hMargin;
+}
+function positionNodeTop(num){
+  return _hy0 + _nodeY0;
+}
+
+//////////////////////////////////////////////
+function redraw(idName){
+  var canvas = document.getElementById(idName);
+  var ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,600,350);
+  initialize(idName);
+  drawVar(idName);
+  drawNode(idName);
+  drawLink(idName);
+}
+
+//////////////////////////////////////////////
+function newVar(name){
+  varInfoHash[name] = varNum;
+  varInfoArray[varNum] = {};
+  varInfoArray[varNum]["name"] = name;
+  varInfoArray[varNum]["ref"] = -1;
+  varNum++;
+}
+
+//////////////////////////////////////////////
+function newNode(){
+  nodeNextRef[nodeNum] = -1;
+  nodePrevRef[nodeNum] = -1;
+  nodeNum++;
+}
+
+//////////////////////////////////////////////
+function drawRootCircle(ctx, x, y){
+  ctx.beginPath();
+  ctx.arc(x, y, 5, 0, Math.PI*2, false);
+  ctx.fill();
+}
+
+//////////////////////////////////////////////
+function drawLine(ctx, x0, y0, x1, y1){
+  ctx.beginPath();
+  ctx.moveTo(x0, y0);
+  ctx.lineTo(x1, y1);
+  ctx.closePath();
+  ctx.stroke();
+}
+
+//////////////////////////////////////////////
+function drawArrow(ctx, x0, y0, x1, y1){
+  var A = new Array(2);
+  var B = new Array(2);
+  var L = new Array(2);
+  var R = new Array(2);
+  A[0] = x0;   A[1] = y0;
+  B[0] = x1;   B[1] = y1;
+  arrowPos(A, B, 5, 14, L, R); // 座標計算
+
+  ctx.beginPath();
+  ctx.moveTo(A[0], A[1]);
+  ctx.lineTo(B[0], B[1]);
+  ctx.closePath();
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(B[0], B[1]);
+  ctx.lineTo(L[0], L[1]);
+  ctx.lineTo(R[0], R[1]);
+  ctx.closePath();
+  ctx.fill();
+}
+
+//////////////////////////////////////////////
+// http://k-hiura.cocolog-nifty.com/blog/2010/11/post-2a62.html
+function arrowPos(A,B,w,h,L,R){ //A,B,L,Rは[0]:x [1]:y
+  var Vx= B[0]-A[0];
+  var Vy= B[1]-A[1];
+  var v = Math.sqrt(Vx*Vx+Vy*Vy);
+  var Ux= Vx/v;
+  var Uy= Vy/v;
+  L[0]= B[0] - Uy*w - Ux*h;
+  L[1]= B[1] + Ux*w - Uy*h;
+  R[0]= B[0] + Uy*w - Ux*h;
+  R[1]= B[1] - Ux*w - Uy*h;
+}
+
+//////////////////////////////////////////////
+function executeLine(command){  
+  // 00: Node ??;
+  // 01: ?? = new Node();
+  // 02: ?? = ??;
+  // 03: ?? = ??.next;
+  // 04: ??.next = ??;
+  // 05: ??.next = ??.next;
+  indexLeftFocus = -1;
+  indexRightFocus = -1;
+  isNextLeftFocus = 0;
+  isNextRightFocus = 0;
+  isPrevLeftFocus = 0;
+  isPrevRightFocus = 0;
+
+  redraw('prevWorld');
+
+  if (command.match(/;$/)){
+    command = command.replace(";","");
+  }else{
+    return "[;] がありません．";
+  }
+  if (command.match(/^Node /) && !command.match(/=/)){ // 00: Node ??;
+    tmp = command.split(/ +/);
+    var varName = tmp[1];
+    if (varName in varInfoHash){
+      alert("" + varName + " is already used!");
+      return "["+varName+"] はすでに宣言済みです．";
+    }else {
+      newVar(varName);
+    }
+  }else if (command.match(/=/)){
+    tmp = command.split(/ *= */);
+    var leftLabel = tmp[0];
+    var leftNew = 0;
+    var leftNext = 0;
+    var leftPrev = 0;
+    var rightLabel = tmp[1];
+    var rightNew = 0;
+    var rightNext = 0;
+    var rightPrev = 0;
+    if (leftLabel.match(/^Node /)){ 
+      leftNew = 1; 
+      tmp = leftLabel.split(" ");
+      leftLabel = tmp[1];
+    }else if (leftLabel.match(/\.next/)){ 
+      leftNext = 1; 
+      tmp = leftLabel.split(".");
+      leftLabel = tmp[0];
+    }else if (leftLabel.match(/\.prev/)){ 
+      leftPrev = 1; 
+      tmp = leftLabel.split(".");
+      leftLabel = tmp[0];
+    }
+    if (rightLabel == "new Node()"){
+      rightNew = 1;
+    }else if (rightLabel.match(/\.next/)){
+      rightNext = 1;
+      tmp = rightLabel.split(".");
+      rightLabel = tmp[0];
+    }else if (rightLabel.match(/\.prev/)){
+      rightPrev = 1;
+      tmp = rightLabel.split(".");
+      rightLabel = tmp[0];
+    }
+    leftLabel  = deleteSpace(leftLabel);
+    rightLabel = deleteSpace(rightLabel);
+//    alert("leftLabel  = [" + leftLabel + "] \n" + 
+//          "rightLabel = [" + rightLabel + "] \n" +
+//          "leftNext = [" + leftNext + "] \n" +
+//          "rightNext = [" + rightNext + "] \n" +
+//          "leftNew = [" + leftNew + "] \n" +
+//          "rightNew = [" + rightNew + "] \n"
+//);
+    var leftVarIndex;
+    var rightVarIndex;
+    if (leftLabel in varInfoHash){
+      leftVarIndex = varInfoHash[leftLabel];
+    }else{
+      if (leftNew == 1){
+        leftVarIndex = varNum;
+        newVar(leftLabel);
+      }else{
+        return "[" + leftLabel + "]はまだ宣言されていません．";
+      }
+    }
+    if (rightNew == 0){
+      if (rightLabel in varInfoHash){
+        rightVarIndex = varInfoHash[rightLabel];
+      }else{
+        return "[" + rightLabel + "]はまだ宣言されていません．";
+      }
+    }
+
+    // 協調表示すべき場所の判定
+    //   ついでに右辺の評価を終わらせておく
+    var rightEvalResult;
+    if (rightNew == 1){
+      rightEvalResult = nodeNum;
+      indexRightFocus = -1;
+      isNextRightFocus = 0;
+    }else{
+      rightEvalResult = varInfoArray[rightVarIndex]["ref"];
+      isNextRightFocus = 0;
+      indexRightFocus = rightVarIndex;
+      if (rightNext == 1){
+        isNextRightFocus = 1;
+        indexRightFocus = rightEvalResult;
+        rightEvalResult =  nodeNextRef[rightEvalResult];
+      }else if (rightPrev == 1){
+        isPrevRightFocus = 1;
+        indexRightFocus = rightEvalResult;
+        rightEvalResult =  nodePrevRef[rightEvalResult];
+      }
+    }
+
+    if (leftNext == 1){
+      var leftPoint = varInfoArray[leftVarIndex]["ref"];
+      indexLeftFocus = leftPoint;
+      isPrevLeftFocus = 0;
+      isNextLeftFocus = 1;
+    }else if (leftPrev == 1){
+      var leftPoint = varInfoArray[leftVarIndex]["ref"];
+      indexLeftFocus = leftPoint;
+      isPrevLeftFocus = 1;
+      isNextLeftFocus = 0;
+    }else{
+      indexLeftFocus = leftVarIndex;
+      isNextLeftFocus = 0;
+      isPrevLeftFocus = 0;
+    }
+
+    redraw('prevWorld');
+
+    // 実際の代入操作
+    if (rightNew == 1){
+      newNode();
+    }
+    if (leftNext == 1){
+      var leftPoint = varInfoArray[leftVarIndex]["ref"];
+      nodeNextRef[leftPoint] = rightEvalResult;
+    }else if (leftPrev == 1){
+      var leftPoint = varInfoArray[leftVarIndex]["ref"];
+      nodePrevRef[leftPoint] = rightEvalResult;
+    }else{
+      varInfoArray[leftVarIndex]["ref"] = rightEvalResult;
+    }
+  }else {
+    return "理解できない文です";
+  }
+//  alert("indexLeftFocus   = [" + indexLeftFocus + "] \n" + 
+//        "isPrevLeftFocus  = [" + isPrevLeftFocus + "] \n" +
+//        "isNextLeftFocus  = [" + isNextLeftFocus + "] \n" +
+//        "indexRightFocus  = [" + indexRightFocus + "] \n" +
+//        "isPrevRightFocus = [" + isPrevRightFocus + "] \n" +
+//        "isNextRightFocus = [" + isNextRightFocus + "] \n"
+//);
+  redraw('nowWorld');
+  return "";
+}
+
+//////////////////////////////////////////////
+function executePrograms(){
+  document.getElementById('stepButton').disable = true;
+  var commandList = getCommandList();
+  var lines;
+  var ttt = document.getElementById("programList");
+  ttt.innerHTML = "";
+  for (lines=0; commandList.length > lines; lines++){
+    var cs = commandList[lines];
+    cs = deleteSpace(cs);
+    if (cs != "") {
+      var status = executeLine(cs);
+      if (status != ""){
+        alert("error: [" + cs + ": " + status + "]");
+        ttt.innerHTML = ttt.innerHTML + "<br>" + '<span style="color: red;font-weight: bold;">' + cs + "</span>";
+        document.getElementById('runButton').disable = true;
+        return;
+      }else{
+        ttt.innerHTML = ttt.innerHTML + "<br>" + '<span style="font-weight: bold;">' + cs + "</span>";
+      }
+    }else{
+      ttt.innerHTML = ttt.innerHTML + "<br>";
+    }
+  }
+  document.getElementById('runButton').disable = true;
+}
+
+var stepNum = 0;
+//////////////////////////////////////////////
+function executeProgramsStepByStep(){
+  document.getElementById('runButton').disable = true;
+  var commandList = getCommandList();
+  var ttt = document.getElementById("programList");
+  if (stepNum >= commandList.length || 0 > stepNum) {
+    return;
+  }else{
+    var cs = commandList[stepNum];
+    document.getElementById('nowCommand').innerHTML = getEmString(cs);
+//    mySleep(1500);
+    cs = deleteSpace(cs);
+    if (cs != "") {
+      var status = executeLine(cs);
+      if (status == -1){
+        alert("error: [" + cs + "]");
+        ttt.innerHTML = ttt.innerHTML + "<br>" + '<span style="color: red;">' + cs + "</span>";
+        document.getElementById('stepButton').disable = true;
+        return; 
+      }else{
+        ttt.innerHTML = ttt.innerHTML + "<br>" + '<span style="font-weight: bold;">' + cs + "</span>";
+      }
+    }else{
+      ttt.innerHTML = ttt.innerHTML + "<br>";
+    }
+    stepNum++;
+  }
+}
+
+
+//////////////////////////////////////////////
+function getCommandList(){
+  var text = document.getElementById('program').value;
+  return text.split(/\r\n|\r|\n/)  ;
+}
+
+//////////////////////////////////////////////
+function clearAll(){
+  varNum = 0;
+  nodeNum = 0;
+  varInfoHash = {};
+  varInfoArray = [];
+  document.getElementById('programList').innerHTML = "";
+  document.getElementById('stepButton').disable = false;
+  document.getElementById('runButton').disable = false;
+  redraw('prevWorld');
+  redraw('nowWorld');
+  stepNum = 0;
+}
+
+//////////////////////////////////////////////
+function deleteSpace(str){
+  return str.replace(/^ +/,"").replace(/ +$/,"");
+}
+
+//////////////////////////////////////////////
+function getEmString(str){
+  if (str.match(/ *= */)){
+    var tmp = str.split("=");
+    return "<span style=\"color: " + leftFocusColor + "\">" + tmp[0] + "</span>=" +
+           "<span style=\"color: " + rightFocusColor + "\">" + tmp[1] + "</span>";
+  }else{
+    return str;
+  }
+}
+
+//////////////////////////////////////////////
+function mySleep(milliSeconds) {
+  var time = new Date().getTime();
+  while (time + milliSeconds > new Date().getTime());
+}
+
+</script>
+</head>
+
+<body>
+<div style="float:left">
+<em style="font-size: 100%; color: darkgreen;">↓↓実行前の対象世界の様子↓↓</em><br>
+<canvas id="prevWorld" width="600" height="300"></canvas><br>
+<span style="font-size: 100%; background: #FDD;">実行する命令：　</span><span style="font-size:100%; background: #FDD;" id="nowCommand"></span><br>
+<em style="font-size: 100%; color: green;">↓↓実行後の対象世界の様子↓↓</em><br>
+<canvas id="nowWorld" width="600" height="300"></canvas>
+</div>
+<div style="margin-left: 620px; width: 400px;">
+<div id="messageArea" style="background: lightgreen;">
+<pre>
+Node の定義
+
+class Node {
+　Node prev;  // 前ノードへの参照
+　String data;
+　Node next;  // 次ノードへの参照
+}
+</pre>
+</div>
+<form name="cmdForm" action="">
+プログラム<br>
+<textarea id="program" rows="10" cols="40">
+Node header;
+Node current;
+Node prevCurrent;
+Node newNode;
+
+newNode = new Node();
+prevCurrent = newNode;
+newNode = new Node();
+current = newNode;
+prevCurrent.next = current;
+current.prev = prevCurrent;
+</textarea><br>
+<input type="button" id="stepButton" value="ステップ実行" onclick="javascript: executeProgramsStepByStep();">
+<input type="button" id="runButton" value="実行" onclick="javascript: executePrograms();">
+<input type="button" value="対象世界の消去" onclick="javascript: clearAll();">
+</form>
+<div id="programList">
+</div>
+</div>
+</body>
+</html>

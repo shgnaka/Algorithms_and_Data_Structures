@@ -1,0 +1,28 @@
+search TomeiKawasaki-IC
+insert 031 YokohamaAoba-IC
+search Atsugi-IC
+insert 051 HadanoNakai-IC
+search Gotenba-IC
+insert 071 Gotenba-JCT
+insert 072 Susono-IC
+search Fuji-IC
+insert 091 Fujikawa-SA/SIC
+insert 092 Shimizu-JCT
+search Yoshida-IC
+insert 131 SagawaMakinohara-IC
+search Kikugawa-IC
+insert 141 Kakegawa-IC
+search Fukuroi-IC
+insert 151 Iwata-IC
+insert 152 EnshuToyoda-PA/SIC
+search Hamamatsu-IC
+insert 161 HamamatsuNishi-IC
+search Mikkabi-IC
+insert 171 Mikkabi-JCT
+search Toyokawa-IC
+insert 181 OtowaGamagori-IC
+search Okazaki-IC
+insert 191 Toyota-JCT
+search Toyota-IC
+insert 201 TomeiMiyoshi-IC
+insert 202 Nisshin-JCT

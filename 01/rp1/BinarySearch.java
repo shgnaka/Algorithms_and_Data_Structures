@@ -9,6 +9,16 @@ public class BinarySearch extends MySearch {
             MyData newData = new MyData(key, data);
             this.data[datanum] = newData;
             datanum++;
+        /* 新規データを正しい位置まで移動させる */
+        for(int i = datanum - 1; i > 0; i--){
+            if (strcmp(this.data[i-1].getKey(), this.data[i].getKey()) > 0){
+                MyData tmp = this.data[i-1];
+                this.data[i-1] = this.data[i];
+                this.data[i] = tmp;
+            }else{
+                break;
+            }
+        }
             return true;
         }else{
             return false;

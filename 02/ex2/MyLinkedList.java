@@ -22,6 +22,18 @@ public class MyLinkedList {
 
     public MyLinkedData search(int data) {
         MyLinkedData p;
+        if (data == head.getData()) {
+            return head;
+        } else if (head.next != null) {
+            p = head.next;
+            while (p != null) {
+                if (p.getData() == data) {
+                    return p;
+                } else {
+                    p = p.next;
+                }
+            }
+        }
         return null;
     }//TODO:searchメソッドが未完成のため，実装する．
 

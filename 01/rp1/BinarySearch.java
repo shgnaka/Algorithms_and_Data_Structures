@@ -26,9 +26,17 @@ public class BinarySearch extends MySearch {
     }
 
     public int searchIndex(String key){
-        for (int i = 0; i < datanum; i++) {
-            if (strcmp(data[i].getKey(), key) == 0) {
-                return i;
+        int low = 0;
+        int high = datanum -1;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            int status = strcmp(key, data[mid].getKey());
+            if (status == 0) {
+                return mid;
+            } else if (status < 0) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
             }
         }
         return -1;

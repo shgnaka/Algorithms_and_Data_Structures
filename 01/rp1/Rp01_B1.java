@@ -125,7 +125,7 @@ class Rp01_B1 {
 
     public static void main(String argv[]) {
         /* This search is linear search */
-        mySearch = new LinearSearch(4096);
+        mySearch = new BinarySearch(4096);
         if (argv.length > 0){
             for(int i = 0; i < argv.length; i++){
                 long startTime = System.currentTimeMillis();

@@ -1,5 +1,5 @@
 import java.util.Arrays;
- 
+
 public class Ex2_12 {
     public static boolean test(MyLinkedList mll, int cr) { // 要素単体テスト
         MyLinkedData r;
@@ -12,7 +12,7 @@ public class Ex2_12 {
             return false;
         }
     }
- 
+
     public static boolean test(MyLinkedList mll, int[] cr) { // 全データテスト
         int count=0;
         int i;
@@ -23,7 +23,7 @@ public class Ex2_12 {
         if (count == cr.length) return true;
         else                    return false;
     }
- 
+
     public static void testAll(int [] cr) {
         System.out.println("=====\ntest " + Arrays.toString(cr));
         MyLinkedList list = new MyLinkedList();
@@ -31,14 +31,14 @@ public class Ex2_12 {
         if (test(list, cr)) System.out.println("OK");
         else                System.out.println("NG");
     }
- 
+
     public static void main(String args[]) {
         int i;
- 
+
         int a[] = {0, 1, 8, 27, 64, 125, 216, 343, 512, 729, 1000};
         int b[] = {4096, 512, 16, 1};
-        int c[] = {****, ****, ****, ****, ****, ****}; // ex1 step1.2 で使ったものをコピー
- 
+        int c[] = {0, 1, 412, 830, 1102, 2005};// ex1 step1.2 で使ったものをコピー
+
         testAll(a);
         testAll(b);
         testAll(c);

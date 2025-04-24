@@ -1,0 +1,85 @@
+提出課題：ex2 必須課題
+学籍番号：724A0068
+　　氏名：中村匠吾
+
+[演習内容]
+1. 実行結果
+  Step1-2のテスト結果を省略せず貼り付けること．
+  java Ex2_12
+  =====
+test [0, 1, 8, 27, 64, 125, 216, 343, 512, 729, 1000]
+  search success: 0
+  search success: 1
+  search success: 8
+  search success: 27
+  search success: 64
+  search success: 125
+  search success: 216
+  search success: 343
+  search success: 512
+  search success: 729
+  search success: 1000
+success: 11/11
+OK
+=====
+test [4096, 512, 16, 1]
+  search success: 4096
+  search success: 512
+  search success: 16
+  search success: 1
+success: 4/4
+OK
+=====
+test [0, 1, 412, 830, 1102, 2005]
+  search success: 0
+  search success: 1
+  search success: 412
+  search success: 830
+  search success: 1102
+  search success: 2005
+success: 6/6
+OK
+  Step1-3のテスト結果を省略せず貼り付けること．
+　java Ex2_13
+=====
+test [0, 1, 8, 27, 64, 125, 216, 343, 512, 729, 1000]
+  delete success: 0  last data search success
+  delete success: 1  last data search success
+  delete success: 8  last data search success
+  delete success: 27  last data search success
+  delete success: 64  last data search success
+  delete success: 125  last data search success
+  delete success: 216  last data search success
+  delete success: 343  last data search success
+  delete success: 512  last data search success
+  delete success: 729  last data search success
+  delete success: 1000  last data search failure
+          delete success: 11/11 OK
+last data search success: 10/10 OK
+=====
+test [4096, 512, 16, 1]
+  delete success: 4096  last data search success
+  delete success: 512  last data search success
+  delete success: 16  last data search success
+  delete success: 1  last data search failure
+          delete success: 4/4 OK
+last data search success: 3/3 OK
+=====
+test [0, 1, 412, 830, 1102, 2005]
+  delete success: 0  last data search success
+  delete success: 1  last data search success
+  delete success: 412  last data search success
+  delete success: 830  last data search success
+  delete success: 1102  last data search success
+  delete success: 2005  last data search failure
+          delete success: 6/6 OK
+last data search success: 5/5 OK
+
+[感想・アンケート]
+2. なにかあれば
+
+[参考文献・謝辞]
+3. 参考文献
+
+
+4. 謝辞

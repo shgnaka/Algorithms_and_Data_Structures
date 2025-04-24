@@ -35,8 +35,31 @@ public class MyLinkedList {
             }
         }
         return null;
-    }//TODO:searchメソッドが未完成のため，実装する．
+    }
 
+    public MyLinkedData delete (int data) {
+        MyLinkedData p;
+        MyLinkedData s = search(data);
+        if (s == null) {
+            return null;
+        } else {
+            if (s == head) {
+                head = head.next;
+                return s;
+            } else {
+                p = head;
+                while (p != null) {
+                    if (p.next == s) {
+                        p.next = s.next;
+                        return s;
+                    } else {
+                        p = p.next;
+                    }
+                }
+            }
+        }
+        return null;
+    }
     public String toString() {
         if (head.next == null) {
             return "head: null";

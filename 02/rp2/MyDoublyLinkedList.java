@@ -1,7 +1,7 @@
 public class MyDoublyLinkedList {
     private MyLinkedData head;
     private MyLinkedData tail;
-    private MyLinkedData prevCurrent;
+    //private MyLinkedData prevCurrent;
     private MyLinkedData current;
     private int compareCount;
 
@@ -26,8 +26,17 @@ public class MyDoublyLinkedList {
 
     public boolean moveNext() {
         if (current.next != null) {
-            prevCurrent = current;
+            //prevCurrent = current;
             current = current.next;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean movePrev() {
+        if (current.prev != null) {
+            current = current.prev;
             return true;
         } else {
             return false;
@@ -51,7 +60,7 @@ public class MyDoublyLinkedList {
         MyLinkedData newData = new MyLinkedData(key, data);
         newData.next = current.next;
         current.next = newData;
-        prevCurrent = current;
+        //prevCurrent = current;
         current = newData;
     }
 
@@ -59,8 +68,9 @@ public class MyDoublyLinkedList {
     public void insertLast(String key, String data) {
         MyLinkedData newData = new MyLinkedData(key, data);
         newData.next = null;
+        newData.prev = tail;
         tail.next = newData;
-        prevCurrent = tail;
+        //prevCurrent = tail;
 
         tail = newData;
         current = newData;
@@ -73,10 +83,10 @@ public class MyDoublyLinkedList {
                 current = p;
                 return p;
             }
-            prevCurrent = p;
+            //prevCurrent = p;
             p = p.next;
         }
-        prevCurrent = null;
+        //prevCurrent = null;
         current = head;
         return null;
     }
@@ -88,26 +98,26 @@ public class MyDoublyLinkedList {
                 current = p;
                 return p;
             }
-            prevCurrent = p;
+            //prevCurrent = p;
             p = p.next;
         }
-        prevCurrent = null;
+        //prevCurrent = null;
         current = head;
         return null;
     }
 
-    public MyLinkedData delete() {
+    public MyDoublyLinkedData delete() {
         if (current != null) {
             if (current.getKey().equals("*header*")) {
                 return null;
             }
-            MyLinkedData prevData = prevCurrent;
+            MyLinkedData prevData = //prevCurrent;
             prevData.next = current.next;
-            MyLinkedData oldCurrent = current;
+            MyDoublyLinkedData oldCurrent = current;
             current = current.next;
             if (current == null) {
-                tail = prevCurrent;
-                prevCurrent = null;
+                tail = oldCurrent.prev;
+                //prevCurrent = null;
                 current = head;
             }
             return oldCurrent;

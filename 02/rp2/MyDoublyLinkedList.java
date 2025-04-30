@@ -1,18 +1,19 @@
 public class MyDoublyLinkedList {
-    private MyLinkedData head;
-    private MyLinkedData tail;
+    private MyDoublyLinkedData head;
+    private MyDoublyLinkedData tail;
     //private MyLinkedData prevCurrent;
-    private MyLinkedData current;
+    private MyDoublyLinkedData current;
     private int compareCount;
 
     MyDoublyLinkedList() {
-        head = new MyLinkedData("*header*", "");
+        head = new MyDoublyLinkedData("*header*", "");
         tail = head;
         current = head;
         tail.next = null;
+        tail.prev = null;
     }
 
-    public MyLinkedData getCurrent() {
+    public MyDoublyLinkedData getCurrent() {
         return current;
     }
 
@@ -57,7 +58,7 @@ public class MyDoublyLinkedList {
 
     // current の後ろに新規データを挿入
     public void insert(String key, String data) {
-        MyLinkedData newData = new MyLinkedData(key, data);
+        MyDoublyLinkedData newData = new MyDoublyLinkedData(key, data);
         current.next.prev = newData;
         newData.next = current.next;
         newData.prev = current;
@@ -68,7 +69,7 @@ public class MyDoublyLinkedList {
 
     // 連結リストの末尾に新規データを挿入
     public void insertLast(String key, String data) {
-        MyLinkedData newData = new MyLinkedData(key, data);
+        MyDoublyLinkedData newData = new MyDoublyLinkedData(key, data);
         newData.next = null;
         newData.prev = tail;
         tail.next = newData;
@@ -78,8 +79,8 @@ public class MyDoublyLinkedList {
         current = newData;
     }
 
-    public MyLinkedData searchByKey(String key) {
-        MyLinkedData p = head;
+    public MyDoublyLinkedData searchByKey(String key) {
+        MyDoublyLinkedData p = head;
         while (p != null) {
             if (strcmp(key, p.getKey()) == 0) {
                 current = p;
@@ -93,8 +94,8 @@ public class MyDoublyLinkedList {
         return null;
     }
 
-    public MyLinkedData searchByData(String data) {
-        MyLinkedData p = head;
+    public MyDoublyLinkedData searchByData(String data) {
+        MyDoublyLinkedData p = head;
         while (p != null) {
             if (strcmp(data, p.getData()) == 0) {
                 current = p;
@@ -108,18 +109,18 @@ public class MyDoublyLinkedList {
         return null;
     }
 
-    public MyLinkedData delete() {
+    public MyDoublyLinkedData delete() {
         if (current != null) {
             if (current.getKey().equals("*header*")) {
                 return null;
             }
             //MyLinkedData prevData = prevCurrent;
-            MyLinkedData prevData = current.prev;
+            MyDoublyLinkedData prevData = current.prev;
             prevData.next = current.next;
             if (current.next != null) {
                 current.next.prev = prevData;
             }
-            MyLinkedData oldCurrent = current;
+            MyDoublyLinkedData oldCurrent = current;
             current = current.next;
             if (current == null) {
                 tail = oldCurrent.prev;
@@ -133,7 +134,7 @@ public class MyDoublyLinkedList {
     }
 
     public void printData() {
-        MyLinkedData p = head;
+        MyDoublyLinkedData p = head;
         while (p != null) {
             if (p == current){
                 System.out.print("*cur* ");

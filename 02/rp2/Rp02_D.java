@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-class Rp02_L {
-    static MyLinkedList linkedList;
+class Rp02_D {
+    static MyDoublyLinkedList linkedList;
 
     private static void initialize(String filename){
         try {
@@ -84,7 +84,13 @@ class Rp02_L {
                 if (status == true){
                     System.out.println("  current is move to next.");
                 }
-            }else if (command.equals("quit") && tokenCount == 1){
+            }else if (command.equals("prev") && tokenCount == 1){
+                boolean status = linkedList.movePrev();
+                if (status == true){
+                    System.out.println("  current is move to prev.");
+                }
+            }
+            else if (command.equals("quit") && tokenCount == 1){
                 System.out.println("  quit.");
                 return false;
             }else{

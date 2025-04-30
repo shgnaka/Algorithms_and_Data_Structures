@@ -49,9 +49,10 @@ public class MyLinkedList {
     // current の後ろに新規データを挿入
     public void insert(String key, String data) {
         MyLinkedData newData = new MyLinkedData(key, data);
-
+        newData.next = current.next;
+        current.next = newData;
+        prevCurrent = current;
         current = newData;
-
     }
 
     // 連結リストの末尾に新規データを挿入

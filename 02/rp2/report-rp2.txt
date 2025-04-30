@@ -5,14 +5,78 @@
 [演習内容]
 1. 実行結果
   java Rp02_L の実行結果をここに貼り付けること．
-  ＃行数が多くなる場合は，rp2-result.txt という別ファイルにして，
-  ＃プログラムとは別に添付し，ここには「rp2-result.txt は別ファイルで添付」
-  ＃と記載してください
+
+current: [*header*] : next [null]
+  command: add 010 Tokyo
+current: [010] Tokyo: next [null]
+  command: add 020 Kanagawa
+current: [020] Kanagawa: next [null]
+  command: add 030 Shizuoka
+current: [030] Shizuoka: next [null]
+  command: add 040 aichi
+current: [040] aichi: next [null]
+  command: show
+      [*header*] : next [010]
+      [010] Tokyo: next [020]
+      [020] Kanagawa: next [030]
+      [030] Shizuoka: next [040]
+*cur* [040] aichi: next [null]
+current: [040] aichi: next [null]
+  command: search 020
+  [020] Kanagawa: next [030](from key) is found.
+current: [020] Kanagawa: next [030]
+  command: search Shizuoka
+  [030] Shizuoka: next [040](from data) is found.
+current: [030] Shizuoka: next [040]
+  command: delete
+  [030] Shizuoka: next [040] deleted.
+current: [040] aichi: next [null]
+  command: show
+      [*header*] : next [010]
+      [010] Tokyo: next [020]
+      [020] Kanagawa: next [040]
+*cur* [040] aichi: next [null]
+current: [040] aichi: next [null]
+  command: quit
+  quit.
 
   java Rp02_D の実行結果をここに貼り付けること．
-  ＃行数が多くなる場合は，rp2-result.txt という別ファイルにして，
-  ＃プログラムとは別に添付し，ここには「rp2-result.txt は別ファイルで添付」
-  ＃と記載してください
+  current: [*header*] : prev [null]: next[null]
+  command: add 010 Tokyo
+current: [010] Tokyo: prev [*header*]: next[null]
+  command: add 020 Kanagawa
+current: [020] Kanagawa: prev [010]: next[null]
+  command: add 030 Shizuoka
+current: [030] Shizuoka: prev [020]: next[null]
+  command: add 040 aichi
+current: [040] aichi: prev [030]: next[null]
+  command: show
+      [*header*] : prev [null]: next[010]
+      [010] Tokyo: prev [*header*]: next[020]
+      [020] Kanagawa: prev [010]: next[030]
+      [030] Shizuoka: prev [020]: next[040]
+*cur* [040] aichi: prev [030]: next[null]
+current: [040] aichi: prev [030]: next[null]
+  command: search 020
+  [020] Kanagawa: prev [010]: next[030](from key) is found.
+current: [020] Kanagawa: prev [010]: next[030]
+  command: search Shizuoka
+  [030] Shizuoka: prev [020]: next[040](from data) is found.
+current: [030] Shizuoka: prev [020]: next[040]
+  command: delete
+  [030] Shizuoka: prev [020]: next[040] deleted.
+current: [040] aichi: prev [020]: next[null]
+  command: show
+      [*header*] : prev [null]: next[010]
+      [010] Tokyo: prev [*header*]: next[020]
+      [020] Kanagawa: prev [010]: next[040]
+*cur* [040] aichi: prev [020]: next[null]
+current: [040] aichi: prev [020]: next[null]
+  command: delete
+  [040] aichi: prev [020]: next[null] deleted.
+current: [*header*] : prev [null]: next[010]
+  command: quit
+  quit.
 
 [検討事項]
 2. 検討１～５の内容を記載する
@@ -35,32 +99,37 @@
 
 [講義内容確認]
 3. 連結リストにおいて「探索」の計算量を示すこと．O(..) の表記で記載．
-
+O(n)
 4. 連結リストにおいて「挿入したい場所の前のノード あるいは 削除対象のノードの
 前のノード」への参照情報を持っている場合の，「挿入」「削除」の計算量をそれぞ
 れ示すこと．O(..) の表記で記載．
-
+「挿入」の計算量: O(1)
+「削除」の計算量: O(1)
 5. 連結リストにおいて「挿入したい場所の前のノード あるいは 削除対象のノードの
 前のノード」への参照情報を持っていない場合(つまり先頭からの探索を必要する)の
 「挿入」「削除」の計算量を示すこと．O(..) の表記で記載．
-
+「削除」の計算量: O(n)
+「挿入」の計算量: O(n)
 6. 連結リスト と 双方向リストの 違いについて，ex2 と rp2 で得られた知見を
    踏まえてまとめよ
-
+連結リストと双方向リストの違いは，対象のノードのprevが存在するか存在しないかである．
 7. (1) 配列による線形探索，(2) 配列による二分探索，(3) 連結リストによる線形探索,
    の探索，登録，削除に関する計算量の違いを説明せよ．
-
+配列による線形探索は連結リストに比べ登録と削除に計算量がかかり，探索は連結リストよりもかからない．配列の二分探索は探索において配列による線形探索と連結リストよりも効率的にできる
 8. 以下に示す３つの状況において，7.で示した3種類の探索の中でどの探索を使う
    のがベストか (選べない場合は複数でも良い) その理由とともに答えよ．
      3-A. 新規登録はほとんど発生せず，探索の速度が要求される場合
+     (2) 配列による二分探索
      3-B. 登録できる最大データ数は決まっているが，削除と新規登録が
           頻発する．ただし，できるかぎりメモリの使用量を抑えたい場合
+     (2) 配列による二分探索
      3-C. 探索，登録，削除が頻発し，特に，登録，削除の速度が要求され
           る場合
+     (3) 連結リストによる線形探索
 
 [感想・アンケート]
 9. Java における「配列」「参照」についてどの程度理解できていると思いますか？
-
+参照については一年生のころよりも理解が進みました．
 10. その他
 
 11. 謝辞 

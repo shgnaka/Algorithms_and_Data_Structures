@@ -103,7 +103,7 @@ class Rp02_D {
     }
 
     public static void main(String argv[]) {
-        linkedList = new MyLinkedList();
+        linkedList = new MyDoublyLinkedList();
         if (argv.length > 0){
             for(int i = 0; i < argv.length; i++){
                 long startTime = System.currentTimeMillis();

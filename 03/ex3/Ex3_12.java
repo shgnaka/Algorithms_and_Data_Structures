@@ -67,22 +67,60 @@ public class Ex3_12 {
     }
 
     static public void main(String args[]) {
-        MyStack ms = new MyStack(3);
-        isEmptyTest(ms, true);  //stack[] is empty
-        pushTest(ms, 10, true); //stack[10]
-        pushTest(ms, 5, true);  //stack[10,5]
-        popTest(ms, 5);         //stack[10]
-        isEmptyTest(ms, false); //stack[10] is not empty
-        pushTest(ms, 1, true);  //stack[10,1]
-        pushTest(ms, 6, true);  //stack[10,1,6]
-        isFullTest(ms, true);   //stack[10,1,6] is full
-        pushTest(ms, 5, false); //stack[10,1,6] because stack size is 3
-        popTest(ms, 6);         //stack[10,1]
-        popTest(ms, 1);         //stack[10]
-        isEmptyTest(ms, false); //stack[10] is not isEmpty
-        popTest(ms, 10);        //stack[]
-        popTest(ms, -2147483648);  //pop returns INT_MIN if stack is empty
+        MyStack ms;
 
+        //case 1
+        int array[] = {1, 2, 3, 4, 5};
+        ms = new MyStack(5);
+        for(int i=0;i<5;i++){
+            pushTest(ms, array[i], true);
+        }
+        for(int i=4;i>=0;i--){
+            popTest(ms, array[i]);
+        }
+        printAllTestResult();
+
+        //case 2
+        resetCount();
+        ms = new MyStack(5);
+        int array2[] = {1, 2, 3, 4, 5};
+        for(int i = 0; i < 5; i++) {
+            pushTest(ms, array2[i], true);
+        }
+        pushTest(ms, 6, false);
+        printAllTestResult();
+
+        //case 3
+        resetCount();
+        ms = new MyStack(10);
+        int array3[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        for(int i = 0; i < 10; i++) {
+            pushTest(ms, array3[i], true);
+        }
+        for(int i = 9; i >= -1; i--) {
+            if (i >= 0) {
+                popTest(ms, array3[i]);
+            } else {
+                popTest(ms, MyStack.POPERROR);
+            }
+        }
+        printAllTestResult();
+
+        //case 4
+        resetCount();
+        ms = new MyStack(100);
+        int array4[] = new int[100];
+        for(int i = 0; i < 100; i++) {
+            array4[i] = i;
+        }
+        for(int i = 0; i < 100; i++) {
+            pushTest(ms, array4[i], true);
+        }
+        isFullTest(ms, true);
+        for(int i = 99; i >= 0; i--) {
+            popTest(ms, array4[i]);
+        }
+        isEmptyTest(ms, true);
         printAllTestResult();
     }
 }

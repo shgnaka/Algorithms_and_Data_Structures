@@ -53,7 +53,7 @@ class Rp02_D {
 
             }else if ((command.equals("delete") || command.equals("del")) 
                     && tokenCount == 1){
-                MyLinkedData result = null;
+                MyDoublyLinkedData result = null;
                 result = linkedList.delete();
                 if (result != null){
                     System.out.println("  " + result.toStringSimple() + " deleted.");
@@ -63,7 +63,7 @@ class Rp02_D {
             }else if ((command.equals("search") || command.equals("find")) 
                     && tokenCount == 2){
                 String searchKey   = token.nextToken();
-                MyLinkedData result = linkedList.searchByKey(searchKey);
+                MyDoublyLinkedData result = linkedList.searchByKey(searchKey);
                 if (result != null){
                     System.out.println("  " + result.toStringSimple() + "(from key) is found.");
                 }else {

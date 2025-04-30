@@ -27,7 +27,12 @@
 検討2(5): pにpの次に連結しているp.nextを代入する
 検討2(6): headから順に，pの値がnullになるまで，つまりtailまで引数のkeyと同じ文字列を探した結果見つからなかった場合に呼び出し元にnullを返す．
 
-検討3: 
+検討3: currentとcurrent.nextの間にnewDataを挿入するというイメージを持ってたので，current.nextをnewData.nextに代入し，newDataをcurrent.nextに代入した．newDataをcurrentに代入する前にcurrentをprevCurrentに代入した．
+
+検討4(1): 現在currentの次に連結しているcurrent.nextをprevCurrentが代入されているprevDataに代入することでcurrentのノードを飛ばしてprevcurrentとcurrent.nextを連結している．currentのノードが連結から外されるようになる．
+
+検討5: 連結リストは，次に連結するノードを参照する形で連結しており，currentの一つ前のノードであるprevCurrentを参照し，prevCurrent.nextにcurrent.nextを代入する必要があるため．
+
 [講義内容確認]
 3. 連結リストにおいて「探索」の計算量を示すこと．O(..) の表記で記載．
 

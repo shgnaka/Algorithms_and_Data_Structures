@@ -14,18 +14,37 @@ class MyStack {
     }
 
     public int pop() {
-        return POPERROR;
+        if (isEmpty() == false) {
+            sp--;
+            return stack[sp];
+        } else {
+            return POPERROR;
+        }
     }
 
     public boolean push(int data) {
-        return false;
+        if (isFull() == false) {
+            stack[sp] = data;
+            sp++;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public boolean isEmpty() {
+        if (sp == 0) {
+        return true;
+        } else {
         return false;
+        }
     }
 
     public boolean isFull() {
-        return false;
+        if (sp == stack.length) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -106,14 +106,18 @@ public class MyDoublyLinkedList {
         return null;
     }
 
-    public MyDoublyLinkedData delete() {
+    public MyLinkedData delete() {
         if (current != null) {
             if (current.getKey().equals("*header*")) {
                 return null;
             }
-            MyLinkedData prevData = //prevCurrent;
+            //MyLinkedData prevData = prevCurrent;
+            MyLinkedData prevData = current.prev;
             prevData.next = current.next;
-            MyDoublyLinkedData oldCurrent = current;
+            if (current.next != null) {
+                current.next.prev = prevData;
+            }
+            MyLinkedData oldCurrent = current;
             current = current.next;
             if (current == null) {
                 tail = oldCurrent.prev;

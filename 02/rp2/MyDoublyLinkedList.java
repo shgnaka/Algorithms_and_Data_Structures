@@ -58,7 +58,9 @@ public class MyDoublyLinkedList {
     // current の後ろに新規データを挿入
     public void insert(String key, String data) {
         MyLinkedData newData = new MyLinkedData(key, data);
+        current.next.prev = newData;
         newData.next = current.next;
+        newData.prev = current;
         current.next = newData;
         //prevCurrent = current;
         current = newData;

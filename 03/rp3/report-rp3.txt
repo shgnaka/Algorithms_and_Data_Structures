@@ -1,0 +1,145 @@
+提出課題：rp3
+学籍番号：724A0068
+　　氏名：中村匠吾
+
+[発展課題の有無] 無し
+
+[演習内容]
+1. 実行結果
+  コンパイルしたプログラムの実行結果と，その結果の解釈結果（なぜそのような
+  実行結果となるか）を文章で記載のこと
+  ＃行数が多くなる場合は，rp3-result.txt という別ファイルにして，
+  ＃プログラムとは別に添付し，ここには「rp3-result.txt は別ファイルで添付」
+  ＃と記載してください
+  Step1-1
+  cmd:push 2
+  cmd = 2 op = 2
+  PUSH 2
+  cmd:push 3
+  cmd = 2 op = 3
+  PUSH 3
+  cmd:add
+  cmd = 3 op = 0
+  ADD (2 3)
+  cmd:push 4
+  cmd = 2 op = 4
+  PUSH 4
+  cmd:push 5
+  cmd = 2 op = 5
+  PUSH 5
+  cmd:sub
+  cmd = 4 op = 0
+  SUB (4 5)
+  cmd:mul
+  cmd = 5 op = 0
+  MUL (5 -1)
+  cmd:pop
+  cmd = 1 op = 0
+  POP -5
+  cmd:
+  結果の解釈
+  push <int変数>はスタックにint型の変数を挿入する
+  pushはcmdが2として登録されている
+  opはpushでint型変数の値が入る変数である．opがないcmdのときにはopに0が入る．
+  addは最新のスタックのインデックスの値と次点で最新のインデックスの値の和をとる．足し算に使った値はインデックスごと削除する．和はスタックに積まれる．
+  addはcmdが3として登録されている．
+  subは最新から一つ古いインデックスの値と最新のインデックスの値の差をとる．引き算に使った値はインデックスごと削除する．差はスタックに積まれる．
+  subはcmdが4として登録されている．
+  mulは最新のスタックのインデックスの値と次点で最新のインデックスの値の積をとる．乗算に使った値はインデックスごと削除する．積はスタックに積まれる．
+  mulはcmdが5として登録されている．
+  
+  Step1-2
+  1+2
+  cmd:push 1
+  cmd = 2 op = 1
+  PUSH 1
+  cmd:push 2
+  cmd = 2 op = 2
+  PUSH 2
+  cmd:add
+  cmd = 3 op = 0
+  ADD (1 2)
+  cmd:pop
+  cmd = 1 op = 0
+  POP 3
+  cmd:
+  結果の解釈
+  push
+
+  1+2*3
+  cmd:push 1
+  cmd = 2 op = 1
+  PUSH 1
+  cmd:push 2
+  cmd = 2 op = 2
+  PUSH 2
+  cmd:push 3
+  cmd = 2 op = 3
+  PUSH 3
+  cmd:mul
+  cmd = 5 op = 0
+  MUL (2 3)
+  cmd:add
+  cmd = 3 op = 0
+  ADD (1 6)
+  cmd:pop
+  cmd = 1 op = 0
+  POP 7
+  cmd:
+  結果の解釈
+
+  (1+2)*3
+  cmd:push 1
+  cmd = 2 op = 1
+  PUSH 1
+  cmd:push 2
+  cmd = 2 op = 2
+  PUSH 2
+  cmd:add
+  cmd = 3 op = 0
+  ADD (1 2)
+  cmd:push 3
+  cmd = 2 op = 3
+  PUSH 3
+  cmd:mul
+  cmd = 5 op = 0
+  MUL (3 3)
+  cmd:pop
+  cmd = 1 op = 0
+  POP 9
+  cmd:
+  結果の解釈
+
+  (5*6)/7
+  cmd:push 5
+  cmd = 2 op = 5
+  PUSH 5
+  cmd:push 6
+  cmd = 2 op = 6
+  PUSH 6
+  cmd:mul
+  cmd = 5 op = 0
+  MUL (5 6)
+  cmd:push 7
+  cmd = 2 op = 7
+  PUSH 7
+  cmd:div
+  cmd = 6 op = 0
+  DIV (30 7)
+  cmd:pop
+  cmd = 1 op = 0
+  POP 4
+  cmd:
+  結果の解釈
+
+  Step 2-2 についての実施状況を記入
+
+2. 検討事項(必須ではない．記入は自由．良回答で加点)
+(加点検討項目) スタックというデータ構造を扱うプログラムの「危うさ」について，今回扱っているプログラムの作り方も参考にして，考察してみよ．
+Web上の資料を検索して参考にした場合には，そのURLを明記のこと．
+また，引用部分と自分で考えて書いた部分を明確に分けて，それぞれがどちらであるかを分かるように記載せよ． 
+
+[感想・アンケート]
+3. その他
+
+4. 謝辞 (授業時間内・時間外にTAや友達に質問をして理解が進んだ場合は氏名を記載すること)

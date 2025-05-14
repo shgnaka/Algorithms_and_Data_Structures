@@ -5,11 +5,12 @@ import java.util.*;
 
 public class MyQueue
 {
-    private Object  queue[];    // 待ち行列本体
+    private String  queue[];    // 待ち行列本体
     private int  queueSize;     // 待ち行列の大きさ
     private int  front;         // 待ち行列の先頭
     private int  rear;          // 待ち行列の末尾
     int size = 0;
+    final String DEQUEUEERROR = "__EMPTY";
                                 // （実際には、末尾の次の要素を指す）
 
     // デフォルトの待ち行列の大きさ
@@ -31,7 +32,7 @@ public class MyQueue
     public MyQueue(int size)
     {
         queueSize = size;
-        queue = new Object[size];
+        queue = new String[size];
         front = rear = 0;
     }
 
@@ -60,14 +61,16 @@ public class MyQueue
      *
      * @param x  待ち行列に入れるデータ
      */
-    public void enqueue(Object x)
+    public boolean enqueue(String x)
     {
-        if (next(rear) == front && size == queueSize) {
-            throw new IllegalStateException("これ以上，待ち行列に要素を追加できません");
+        if (next(rear) == front && size == queue.length) {
+            System.out.println("これ以上，待ち行列に要素を追加できません");
+            return false;
         }
         queue[rear] = x;
         rear = next(rear);
         size++;
+        return true;
     }
 
     /**
@@ -75,12 +78,13 @@ public class MyQueue
      *
      * @return  待ち行列から取り出したデータ
      */
-    public Object dequeue()
+    public String dequeue()
     {
         if (front == rear && size == 0) {
-            throw new NoSuchElementException("待ち行列が空なので要素を取り出せません");
+            System.out.println("待ち行列が空なので要素を取り出せません");
+            return DEQUEUEERROR;
         }
-        Object x = queue[front];
+        String x = queue[front];
         queue[front] = null;            // 要素をnullでクリアする
         front = next(front);
         size--;
@@ -94,7 +98,7 @@ public class MyQueue
      */
     public boolean isEmpty()
     {
-        return size == 0;//front == rear;
+        return size == 0;
     }
 
     /**

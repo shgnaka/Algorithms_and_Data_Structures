@@ -62,7 +62,7 @@ public class MyQueue
      */
     public void enqueue(Object x)
     {
-        if (next(rear) == front || size == queueSize) {
+        if (next(rear) == front && size == queueSize) {
             throw new IllegalStateException("これ以上，待ち行列に要素を追加できません");
         }
         queue[rear] = x;
@@ -77,7 +77,7 @@ public class MyQueue
      */
     public Object dequeue()
     {
-        if (front == rear || size == 0) {
+        if (front == rear && size == 0) {
             throw new NoSuchElementException("待ち行列が空なので要素を取り出せません");
         }
         Object x = queue[front];
@@ -111,9 +111,6 @@ public class MyQueue
                 s += queue[i] + " ";
             }
         }
-        //for (int i = front; i != rear; i = next(i)) {
-        //    s += queue[i] + " ";
-        //}
         s += "] front=" + front + " rear=" + rear;
         return s;
     }

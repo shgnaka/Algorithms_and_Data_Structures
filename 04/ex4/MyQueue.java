@@ -9,6 +9,7 @@ public class MyQueue
     private int  queueSize;     // 待ち行列の大きさ
     private int  front;         // 待ち行列の先頭
     private int  rear;          // 待ち行列の末尾
+    int size = 0;
                                 // （実際には、末尾の次の要素を指す）
 
     // デフォルトの待ち行列の大きさ
@@ -50,6 +51,7 @@ public class MyQueue
     public void clear()
     {
         front = rear = 0;
+        size = 0;
         Arrays.fill(queue, 0, queueSize, null);  // 待ち行列をnullでクリアする
     }
 
@@ -60,11 +62,12 @@ public class MyQueue
      */
     public void enqueue(Object x)
     {
-        if (next(rear) == front) {
+        if (next(rear) == front || size == queueSize) {
             throw new IllegalStateException("これ以上，待ち行列に要素を追加できません");
         }
         queue[rear] = x;
         rear = next(rear);
+        size++;
     }
 
     /**
@@ -74,12 +77,13 @@ public class MyQueue
      */
     public Object dequeue()
     {
-        if (front == rear) {
+        if (front == rear || size == 0) {
             throw new NoSuchElementException("待ち行列が空なので要素を取り出せません");
         }
         Object x = queue[front];
         queue[front] = null;            // 要素をnullでクリアする
         front = next(front);
+        size--;
         return x;
     }
 
@@ -90,7 +94,7 @@ public class MyQueue
      */
     public boolean isEmpty()
     {
-        return front == rear;
+        return size == 0;//front == rear;
     }
 
     /**
@@ -101,9 +105,15 @@ public class MyQueue
     public String toString()
     {
         String s = "MyQueue=[";
-        for (int i = front; i != rear; i = next(i)) {
-            s += queue[i] + " ";
+        if (!isEmpty()) {
+            s += queue[front] + " ";
+            for (int i = next(front); i != rear; i = next(i)) {
+                s += queue[i] + " ";
+            }
         }
+        //for (int i = front; i != rear; i = next(i)) {
+        //    s += queue[i] + " ";
+        //}
         s += "] front=" + front + " rear=" + rear;
         return s;
     }

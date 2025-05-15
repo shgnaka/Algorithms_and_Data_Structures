@@ -10,7 +10,7 @@ public class MyQueue
     private int  front;         // 待ち行列の先頭
     private int  rear;          // 待ち行列の末尾
     int size = 0;
-    final String DEQUEUEERROR = "__EMPTY";
+    final String DEQUEUEERROR = "__EMPTY__";
                                 // （実際には、末尾の次の要素を指す）
 
     // デフォルトの待ち行列の大きさ

@@ -1,0 +1,1 @@
+    0.034[s] for reading ex5-0-data.txt.

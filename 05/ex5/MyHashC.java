@@ -21,6 +21,7 @@ class MyHashC {
     private static class Entry{
         MyKeyword keyword;
         Entry next;
+        Entry prev;
         Entry(MyKeyword keyword){
             this.keyword = keyword;
         }
@@ -52,7 +53,23 @@ class MyHashC {
     }
 
     public MyKeyword delete(String key){
-        return null;
+        int h = hash(key);
+        Entry p = table[h];
+        Entry q = p.prev;
+        while (p != null) {
+            if (p.keyword.getKey().equals(key)) {
+            if (q == null) {
+                table[h] = p.next;
+                return p.keyword;
+            } else {
+                q.next = p.next;
+                return p.keyword;
+            }
+            }
+        p = p.next;
+        q = p;
+        }
+        return null;        
     }
 
     public String toString(){

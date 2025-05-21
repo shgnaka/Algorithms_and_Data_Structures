@@ -40,6 +40,14 @@ class MyHashC {
     }
 
     public MyKeyword search(String key){
+        int h = hash(key);
+        Entry p = table[h];
+        while (p != null) {
+            if (p.keyword.getKey().equals(key)) {
+                return p.keyword;
+            }
+            p = p.next;
+        }
         return null;
     }
 

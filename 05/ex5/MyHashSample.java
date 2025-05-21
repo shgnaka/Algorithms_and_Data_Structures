@@ -6,9 +6,11 @@ class MyHashSample {
     }
 
     public int hash(String key) {
-        int r;
+        int r = 0;
+        for (int i = 0; i < key.length(); i++) {
+            r += key.charAt(i);
+        }
         // 文字列 key のいち文字ずつのアスキーコードの合計を r に保存
-
-        return r % table.*****; // (配列 table の長さを示すフィールド)
+        return r % table.length; // (配列 table の長さを示すフィールド)
     }
 }

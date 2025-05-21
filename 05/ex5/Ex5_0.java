@@ -11,8 +11,8 @@ public class Ex5_0 {
 
     public static void test01() {
         MyHashSample hash = new MyHashSample(100);
-        hashTest(hash, "junior", ****); // **** には hash("junior") の予測値を記入
-        hashTest(hash, "your", ****); // **** には hash("your") の予測値を記入 );
+        hashTest(hash, "junior", SumAsciiCode.returnAscii("junior") % 100); // **** には hash("junior") の予測値を記入
+        hashTest(hash, "your", SumAsciiCode.returnAscii("your") % 100); // **** には hash("your") の予測値を記入 );
     }
 
     public static void main(String[] argv){

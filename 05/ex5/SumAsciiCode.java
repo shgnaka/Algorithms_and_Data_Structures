@@ -19,4 +19,11 @@ class SumAsciiCode {
         }
         sc.close();
     }
+    public static int returnAscii(String string) {
+        int t = 0;
+        for(int i = 0; i < string.length(); i++){
+            t += (int)string.charAt(i);
+        }
+        return t;
+    }
 }

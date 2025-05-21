@@ -8,9 +8,20 @@ class MyKeyword{
     }
 
     //getter your code
-
+    public String getKey() {
+        return this.key;
+    }
+    public String getData() {
+        return this.data;
+    }
     //setter your code
-    
+    public void setKey(String key) {
+        this.key = key;
+    }
+    public void setData(String data) {
+        this.data = data;
+    }
+
     public String toString(){
         String str = key + " : ";
         if (data.length()>28){

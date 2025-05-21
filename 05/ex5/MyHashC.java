@@ -10,12 +10,14 @@ class MyHashC {
         elements = 0;
     }
 
-    public int hash(String key){
-        int r = 0;
-        // your code
-        return r % table.length;
+    public int hash(String key) {
+    int r = 0;
+    for (int i = 0; i < key.length(); i++) {
+        r += key.charAt(i);
     }
-
+    // 文字列 key のいち文字ずつのアスキーコードの合計を r に保存
+    return r % table.length; // (配列 table の長さを示すフィールド)
+    }
     private static class Entry{
         MyKeyword keyword;
         Entry next;
@@ -25,6 +27,15 @@ class MyHashC {
     }
 
     public void insert(MyKeyword k){
+        Entry newEntry = new Entry(k);
+        int h = hash(k.getKey());
+        if (table[h] == null) {
+            table[h] = newEntry;
+        } else {
+            newEntry.next = table[h];
+            table[h] = newEntry;
+        }
+        //elements++;
         return;
     }
 
